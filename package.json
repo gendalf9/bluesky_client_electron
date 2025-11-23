@@ -1,0 +1,125 @@
+{
+  "name": "bluesky_client",
+  "version": "1.3.0",
+  "description": "A secure desktop client for Bluesky social network",
+  "main": "main.js",
+  "homepage": "https://bsky.app",
+  "scripts": {
+    "start": "electron .",
+    "format": "prettier --write .",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:security": "jest __tests__/security.test.js",
+    "test:utils": "jest __tests__/utils.test.js",
+    "test:app": "jest __tests__/app.integration.test.js",
+    "dist": "electron-builder --publish=never",
+    "dist:mac": "electron-builder --mac",
+    "dist:mac-universal": "electron-builder --mac --universal",
+    "dist:win": "electron-builder --win",
+    "dist:win-all": "electron-builder --win --x64 --ia32",
+    "dist:all": "electron-builder --mac --win --linux",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "devDependencies": {
+    "@jest/globals": "^30.2.0",
+    "electron": "^39.2.3",
+    "electron-builder": "^26.0.12",
+    "electron-icon-builder": "^2.0.1",
+    "jest": "^30.2.0",
+    "prettier": "^3.6.2",
+    "spectron": "^19.0.0"
+  },
+  "keywords": [
+    "bluesky",
+    "social",
+    "atproto",
+    "electron",
+    "desktop",
+    "secure"
+  ],
+  "author": {
+    "name": "Bluesky Client Team",
+    "email": "contact@example.com"
+  },
+  "license": "MIT",
+  "type": "commonjs",
+  "build": {
+    "appId": "com.example.blueskyclient",
+    "productName": "Bluesky Client",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "icon.png",
+      "icon.icns",
+      "node_modules/**/*",
+      "package.json"
+    ],
+    "mac": {
+      "category": "Social Networking",
+      "icon": "icon.icns",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "universal"
+          ]
+        }
+      ],
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist"
+    },
+    "dmg": {
+      "contents": [
+        {
+          "x": 110,
+          "y": 150
+        },
+        {
+          "x": 240,
+          "y": 150,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ],
+      "title": "Bluesky Client ${version}"
+    },
+    "win": {
+      "icon": "icon.png",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "allowElevation": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Bluesky Client"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ]
+    },
+    "publish": null
+  }
+}
