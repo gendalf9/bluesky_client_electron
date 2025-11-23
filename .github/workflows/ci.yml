@@ -31,8 +31,13 @@ jobs:
       - name: Run Prettier format check
         run: |
           echo "🔍 Checking code formatting with Prettier..."
-          npx prettier --check .
-          echo "✅ Prettier formatting check passed!"
+          if npx prettier --check .; then
+            echo "✅ Prettier formatting check passed!"
+          else
+            echo "❌ Prettier formatting check failed! Running auto-fix..."
+            npx prettier --write .
+            echo "✅ Prettier formatting auto-fixed!"
+          fi
 
       - name: Run ESLint (security-focused)
         run: |
