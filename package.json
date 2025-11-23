@@ -7,6 +7,8 @@
   "scripts": {
     "start": "electron .",
     "format": "prettier --write .",
+    "lint": "eslint main.js",
+    "lint:fix": "eslint main.js --fix",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
@@ -23,9 +25,12 @@
   },
   "devDependencies": {
     "@jest/globals": "^30.2.0",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
     "electron": "^39.2.3",
     "electron-builder": "^26.0.12",
     "electron-icon-builder": "^2.0.1",
+    "eslint": "^8.57.0",
+    "eslint-plugin-security": "^1.7.1",
     "jest": "^30.2.0",
     "prettier": "^3.6.2",
     "spectron": "^19.0.0"

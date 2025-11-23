@@ -1,0 +1,49 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "node": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:security/recommended"
+  ],
+  "plugins": [
+    "security"
+  ],
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "commonjs"
+  },
+  "rules": {
+    "security/no-eval": "error",
+    "security/no-implied-eval": "error",
+    "security/no-new-func": "error",
+    "security/no-obj-calls": "error",
+    "security/detect-object-injection": "error",
+    "security/detect-pseudoRandomBytes": "error",
+    "security/no-unsafe-assign": "error",
+    "security/detect-non-literal-regexp": "warn",
+    "security/detect-possible-timing-attacks": "warn",
+    "security/detect-buffer-noassert": "warn",
+    "security/detect-child-process": "warn",
+    "security/detect-disable-mustache-escape": "warn",
+    "security/detect-eval-with-expression": "error",
+    "security/detect-new-buffer": "warn",
+    "security/detect-no-csrf-before-method-override": "error",
+    "security/detect-non-literal-require": "warn",
+    "security/detect-possible-timing-attacks": "warn",
+    "security/detect-pseudoRandomBytes": "error",
+    "security/no-unsafe-assign": "error",
+    "no-console": "warn",
+    "no-debugger": "error",
+    "no-unused-vars": "warn",
+    "prefer-const": "error",
+    "no-var": "error",
+    "eqeqeq": "error",
+    "curly": ["error", "all"],
+    "brace-style": ["error", "1tbs"],
+    "quotes": ["error", "single"],
+    "semi": ["error", "always"]
+  }
+}
