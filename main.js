@@ -5,6 +5,7 @@ const {
   Tray,
   Menu,
   nativeImage,
+  ipcMain,
 } = require('electron');
 const path = require('path');
 const { URL } = require('url');
@@ -65,6 +66,8 @@ function createWindow() {
       enableRemoteModule: false,
       allowRunningInsecureContent: false,
       experimentalFeatures: false,
+      // Security: Preload script for secure IPC communication
+      preload: path.join(__dirname, 'preload.js'),
     },
     title: 'Bluesky Client',
     // Security: Prevent window from being accessed by other scripts
@@ -271,6 +274,75 @@ function createWindow() {
           }
         };
 
+        // Create floating always on top button with proper reference management
+        function createFloatingPinButton() {
+          if (document.getElementById('floating-pin-btn')) return;
+
+          const button = document.createElement('button');
+          button.id = 'floating-pin-btn';
+          button.innerHTML = '📌';
+          button.title = 'Toggle Always on Top';
+          button.style.cssText = \`
+            position: fixed;
+            bottom: 90px;
+            left: 30px;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 165, 0, 0.8);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 10001;
+            box-shadow: 0 4px 15px rgba(255, 165, 0, 0.3);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+            outline: none;
+            opacity: 0.7;
+            transform: scale(0.9);
+          \`;
+
+          // Event handlers stored in manager for proper cleanup
+          const mouseEnterHandler = () => {
+            button.style.background = 'rgba(255, 165, 0, 0.95)';
+            button.style.opacity = '1';
+            button.style.transform = 'scale(1.05)';
+            button.style.boxShadow = '0 6px 20px rgba(255, 165, 0, 0.4)';
+          };
+
+          const mouseLeaveHandler = () => {
+            button.style.background = 'rgba(255, 165, 0, 0.8)';
+            button.style.opacity = '0.7';
+            button.style.transform = 'scale(0.9)';
+            button.style.boxShadow = '0 4px 15px rgba(255, 165, 0, 0.3)';
+          };
+
+          const clickHandler = () => {
+            // Toggle always on top state via IPC
+            window.electronAPI?.toggleAlwaysOnTop();
+          };
+
+          button.addEventListener('mouseenter', mouseEnterHandler);
+          button.addEventListener('mouseleave', mouseLeaveHandler);
+          button.addEventListener('click', clickHandler);
+
+          // Store handlers for cleanup
+          ScrollRefreshManager.handlers.pinMouseEnter = mouseEnterHandler;
+          ScrollRefreshManager.handlers.pinMouseLeave = mouseLeaveHandler;
+          ScrollRefreshManager.handlers.pinClick = clickHandler;
+
+          document.body.appendChild(button);
+
+          // Store reference for cleanup
+          ScrollRefreshManager.elements.pinButton = button;
+        }
+
         // Create floating refresh button with proper reference management
         function createFloatingRefreshButton() {
           if (document.getElementById('floating-refresh-btn')) return;
@@ -431,6 +503,9 @@ function createWindow() {
           window.addEventListener('scroll', ScrollRefreshManager.handlers.handleScrollShow, { passive: true });
         }
 
+        // Create the floating pin button
+        createFloatingPinButton();
+
         // Create the floating refresh button
         createFloatingRefreshButton();
 
@@ -483,6 +558,22 @@ function createWindow() {
           }
           if (manager.handlers.handleScrollShow) {
             window.removeEventListener('scroll', manager.handlers.handleScrollShow);
+          }
+
+          // Remove pin button and its event listeners
+          if (manager.elements.pinButton) {
+            const pinButton = manager.elements.pinButton;
+            if (manager.handlers.pinMouseEnter) {
+              pinButton.removeEventListener('mouseenter', manager.handlers.pinMouseEnter);
+            }
+            if (manager.handlers.pinMouseLeave) {
+              pinButton.removeEventListener('mouseleave', manager.handlers.pinMouseLeave);
+            }
+            if (manager.handlers.pinClick) {
+              pinButton.removeEventListener('click', manager.handlers.pinClick);
+            }
+            pinButton.remove();
+            manager.elements.pinButton = null;
           }
 
           // Remove floating button and its event listeners
@@ -896,6 +987,17 @@ function addAppListener(event, listener) {
   app.on(event, listener);
   appEventListeners.push({ event, listener });
 }
+
+// IPC handler for toggle always on top
+ipcMain.on('toggle-always-on-top', () => {
+  if (mainWindow && !mainWindow.isDestroyed()) {
+    const currentState = mainWindow.isAlwaysOnTop();
+    mainWindow.setAlwaysOnTop(!currentState);
+
+    // Notify renderer about the state change
+    mainWindow.webContents.send('always-on-top-changed', !currentState);
+  }
+});
 
 // Register app events with cleanup tracking
 addAppListener('window-all-closed', () => {
