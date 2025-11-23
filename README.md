@@ -23,13 +23,17 @@ A secure desktop client for Bluesky social network built with Electron.
 ## 📦 Installation
 
 ### Windows
+
 Download `Bluesky Client Setup.exe` from the [latest release](https://github.com/gendalf9/bluesky_client_electron/releases).
 
 ### macOS
+
 Download `Bluesky Client-*.dmg` from the [latest release](https://github.com/gendalf9/bluesky_client_electron/releases).
 
 ### Linux
+
 Choose from the following packages from the [latest release](https://github.com/gendalf9/bluesky_client_electron/releases):
+
 - `Bluesky Client*.AppImage` (Portable)
 - `Bluesky Client*.deb` (Debian/Ubuntu)
 - `Bluesky Client*.rpm` (RedHat/Fedora)
@@ -37,10 +41,12 @@ Choose from the following packages from the [latest release](https://github.com/
 ## 🔧 Development
 
 ### Prerequisites
+
 - Node.js 20 or later
 - npm or yarn
 
 ### Setup
+
 ```bash
 # Clone the repository
 git clone https://github.com/gendalf9/bluesky_client_electron.git
@@ -54,6 +60,7 @@ npm start
 ```
 
 ### Building
+
 ```bash
 # Build for current platform
 npm run dist
@@ -68,6 +75,7 @@ npm run dist:linux  # Linux
 ```
 
 ### Testing
+
 ```bash
 # Run all tests
 npm test
@@ -80,6 +88,7 @@ npm run test:coverage
 ```
 
 ### Code Formatting
+
 ```bash
 # Format code with Prettier
 npm run format
@@ -97,6 +106,7 @@ npm run format
 ## 🔧 Configuration
 
 The application uses secure defaults:
+
 - Node.js integration disabled
 - Context isolation enabled
 - Sandbox enabled
@@ -132,6 +142,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ## 📞 Support
 
 For support and questions:
+
 - Open an issue on [GitHub Issues](https://github.com/gendalf9/bluesky_client_electron/issues)
 - Check existing issues for solutions
 
